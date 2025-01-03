@@ -2,19 +2,24 @@
   "name": "password-api",
   "version": "0.0.1",
   "description": "api for creating passwords and pins",
-  "main": "index.js",
-  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon --exec ts-node ./index.ts"
   },
   "author": "Mauricio Borawski",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "6.1.0",
     "express": "^4.21.2",
     "secure-random-password": "^0.2.3",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "prisma": "^6.1.0"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.1.0",
+    "typescript": "^5.7.2"
   }
 }
