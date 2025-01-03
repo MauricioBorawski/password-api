@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { z } from 'zod';
 
 import type { Response, Request } from 'express';
 
@@ -13,39 +14,48 @@ export async function getUsers(_req: Request, res: Response) {
 }
 
 export async function createUser(req: Request, res: Response) {
-  if (!req.body) {
-    res.status(400).json({ error: 'Request body is required' });
+  const bodySchema = z.object({
+    name: z.string(),
+    email: z.string().email(),
+  });
 
-    return;
-  }
+  return new Promise<z.infer<typeof bodySchema>>((resolve) =>
+    resolve(bodySchema.parse(req.body))
+  )
+    .then(async (user) => {
+      const userExists = await prisma.user.findUnique({
+        where: {
+          email: user.email,
+        },
+      });
 
-  if (Object.keys(req.body).length > 2) {
-    res
-      .status(400)
-      .json({ error: 'Request body should have only name and email' });
-
-    return;
-  }
-
-  if (
-    Object.keys(req.body).some((key) => {
-      return key !== 'name' && key !== 'email';
+      if (userExists) {
+        throw new Error('1');
+      } else {
+        return user;
+      }
     })
-  ) {
-    res
-      .status(400)
-      .json({ error: 'Request body should have only name and email' });
+    .then(async (user) => {
+      const newUser = await prisma.user.create({
+        data: {
+          name: user.name,
+          email: user.email,
+        },
+      });
 
-    return;
-  }
+      await prisma.$disconnect();
 
-  if (req.body.name === '' || req.body.email === '') {
-    res.status(400).json({ error: 'Name and email are required' });
+      res.status(201).json({ name: newUser.name, email: newUser.email });
+    })
+    .catch(async (error) => {
+      await prisma.$disconnect();
 
-    return;
-  }
+      if (error.message === '1') {
+        res.status(409).json({ error: 'User already exists' });
 
-  const { email, name } = req.body;
+        return;
+      }
 
-  res.status(201).json({ email, name });
+      res.status(400).json({ error: 'Invalid data' });
+    });
 }
