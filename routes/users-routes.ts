@@ -1,7 +1,7 @@
-import { Router } from "express";
+import { Router } from 'express';
 
 const router = Router();
 
-router.get("/users/:id", (req, res) => { });
+router.get('/users/:id', (req, res) => {});
 
 export default router;

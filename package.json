@@ -4,7 +4,8 @@
   "description": "api for creating passwords and pins",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node ./index.ts"
+    "start": "nodemon --exec ts-node ./index.ts",
+    "format": "prettier --write ."
   },
   "author": "Mauricio Borawski",
   "license": "ISC",
@@ -16,10 +17,15 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.17.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
     "nodemon": "^3.1.9",
+    "prettier": "3.4.2",
     "prisma": "^6.1.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.19.0"
   }
 }
